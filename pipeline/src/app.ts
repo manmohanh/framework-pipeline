@@ -5,7 +5,7 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import fs from "fs";
 import path from "path";
-import { appBoilerplate } from "./util/boilerplate";
+import { appBoilerplate, routerBoilerplate } from "./util/boilerplate";
 const log = console.log;
 
 const validateService = (service: string) => {
@@ -46,11 +46,17 @@ const copyFiles = (files: string[], inputPath: string, outputPath: string) => {
   });
 };
 
+const getBoilerplate = (file:string,service:string) => {
+  if(file === ".router.ts")
+    return routerBoilerplate(service)
+  return ""
+}
+
 const createFiles = (files: string[], service: string, srcPath: string) => {
   files.forEach((file) => {
     const filename = `${service}${file}`;
     const filepath = path.join(srcPath, filename);
-    fs.writeFileSync(filepath, "");
+    fs.writeFileSync(filepath, getBoilerplate(file,service));
   });
 };
 
@@ -127,6 +133,9 @@ const app = async () => {
       ".router.ts",
     ];
 
+    const lastPort = parseInt(process.env.LAST_PORT!);
+    const newPort = lastPort + 1;
+
     // Service folder
     makeFolder(servicePath);
 
@@ -134,11 +143,14 @@ const app = async () => {
     makeFolder(srcPath);
 
     // creating app.ts
-    fs.writeFileSync(appFilePath, appBoilerplate.join("\n"),"utf-8");
+    
+    fs.writeFileSync(
+      appFilePath,
+      appBoilerplate(serviceName, newPort),
+      "utf-8"
+    );
 
     // change last port in pipeline
-    const lastPort = parseInt(process.env.LAST_PORT!);
-    const newPort = lastPort + 1;
     updateLastPort(pipelinePath, newPort);
     createEnvForNewService(pipelinePath, servicePath, newPort);
 

@@ -1,0 +1,25 @@
+import { config } from "dotenv";
+config();
+
+import mongoose from "mongoose";
+mongoose
+  .connect(process.env.DB!)
+  .then(() => console.log("Auth - Database is connected"))
+  .catch(() => console.log("Auth - Failed to connect"));
+
+import express from "express";
+import morgan from "morgan"
+import cors from "cors"
+
+
+const app = express();
+app.listen(process.env.PORT, () =>
+  console.log(`Auth service running on port:${process.env.PORT}`)
+);
+
+app.use(cors({
+    origin:process.env.CLIENT,
+    credentials:true
+}))
+app.use(morgan('dev'))
+
