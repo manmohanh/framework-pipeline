@@ -108,6 +108,22 @@ const createEnvForNewService = (
   fs.writeFileSync(newEnvPath, modifiedData.join("\n"));
 };
 
+const createDockerFileForNewService = (
+  pipelinePath: string,
+  servicePath: string,
+  newPort: number
+) => {
+  const pipelineDockerFilePath = path.join(pipelinePath, "Dockerfile");
+  const newDockerFilePath = path.join(servicePath, "Dockerfile");
+  const dockerFileData = fs.readFileSync(pipelineDockerFilePath, "utf-8");
+  const replaceDockerPort = dockerFileData.replace(
+    /EXPOSE\s*\d+/,
+    `EXPOSE ${newPort}`
+  );
+
+  fs.writeFileSync(newDockerFilePath, replaceDockerPort);
+};
+
 const app = async () => {
   try {
     const welcomeMessage = chalk.bgMagenta.white.bold(
@@ -132,7 +148,7 @@ const app = async () => {
     const servicePath = path.join(rootPath, serviceName);
     const srcPath = path.join(servicePath, "src");
     const appFilePath = path.join(srcPath, "app.ts");
-    const filesListForCopy = ["Dockerfile", "package.json", "tsconfig.json"];
+    const filesListForCopy = ["package.json", "tsconfig.json"];
 
     const filesListForCreate = [
       ".controller.ts",
@@ -165,6 +181,7 @@ const app = async () => {
     // change last port in pipeline
     updateLastPort(pipelinePath, newPort);
     createEnvForNewService(pipelinePath, servicePath, newPort);
+    createDockerFileForNewService(pipelinePath, servicePath, newPort);
 
     //copying all files for initial setup
     copyFiles(filesListForCopy, pipelinePath, servicePath);
