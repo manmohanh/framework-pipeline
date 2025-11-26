@@ -9,7 +9,7 @@ const getServiceInPascalCase = (service: string) => {
 };
 
 export const appBoilerplate = (service: string, port: number) => {
-    const Provider = getServiceInPascalCase(service)
+  const Provider = getServiceInPascalCase(service);
   return [
     `import dotenv from "dotenv"`,
     `dotenv.config()\n`,
@@ -35,7 +35,7 @@ export const appBoilerplate = (service: string, port: number) => {
 };
 
 export const routerBoilerplate = (service: string) => {
-  const Provider = getServiceInPascalCase(service)
+  const Provider = getServiceInPascalCase(service);
   return [
     `import {Router,Request,Response} from "express"`,
     `const ${Provider}Router = Router()\n`,
@@ -47,7 +47,7 @@ export const routerBoilerplate = (service: string) => {
 };
 
 export const interfaceBoilerplate = (service: string) => {
-  const Provider = getServiceInPascalCase(service)
+  const Provider = getServiceInPascalCase(service);
   return [
     `import { Document } from "mongoose";\n`,
     `export interface ${Provider}ModelInterface extends Document {\n`,
@@ -56,7 +56,7 @@ export const interfaceBoilerplate = (service: string) => {
 };
 
 export const modelBoilerplate = (service: string) => {
-  const Provider = getServiceInPascalCase(service)
+  const Provider = getServiceInPascalCase(service);
   return [
     `import {Schema,model} from "mongoose"`,
     `import { ${Provider}ModelInterface } from "./${service}.interface"\n`,
@@ -66,4 +66,37 @@ export const modelBoilerplate = (service: string) => {
     `const ${Provider}Model = model<${Provider}ModelInterface>("${Provider}",schema)`,
     `export default ${Provider}Model`,
   ].join("\n");
+};
+
+export const packageBoilerplate = (service: string) => {
+  const data = {
+    name: service,
+    version: "1.0.0",
+    description: "",
+    main: "index.js",
+    scripts: {
+      build: "tsc",
+      dev: "ts-node-dev --respawn --transpile-only src/app.ts",
+      start: "node dist/app.js",
+    },
+    keywords: [],
+    author: "",
+    license: "ISC",
+    dependencies: {
+      cors: "^2.8.5",
+      dotenv: "^17.2.3",
+      express: "^5.1.0",
+      mongoose: "^9.0.0",
+      morgan: "^1.10.1",
+    },
+    devDependencies: {
+      "@types/cors": "^2.8.19",
+      "@types/express": "^5.0.5",
+      "@types/morgan": "^1.9.10",
+      "@types/node": "^24.10.1",
+      "ts-node-dev": "^2.0.0",
+      typescript: "^5.9.3",
+    },
+  }
+  return JSON.stringify(data,null,2);
 };

@@ -10,6 +10,7 @@ import {
   appBoilerplate,
   interfaceBoilerplate,
   modelBoilerplate,
+  packageBoilerplate,
   routerBoilerplate,
 } from "./util/boilerplate";
 import { promisify } from "util";
@@ -108,6 +109,12 @@ const createEnvForNewService = (
   fs.writeFileSync(newEnvPath, modifiedData.join("\n"));
 };
 
+const createPackageForNewService = (service: string, servicePath: string) => {
+  const data = packageBoilerplate(service);
+  const newPackagePath = path.join(servicePath, "package.json");
+  fs.writeFileSync(newPackagePath, data);
+};
+
 const createDockerFileForNewService = (
   pipelinePath: string,
   servicePath: string,
@@ -148,7 +155,7 @@ const app = async () => {
     const servicePath = path.join(rootPath, serviceName);
     const srcPath = path.join(servicePath, "src");
     const appFilePath = path.join(srcPath, "app.ts");
-    const filesListForCopy = ["package.json", "tsconfig.json"];
+    const filesListForCopy = ["tsconfig.json"];
 
     const filesListForCreate = [
       ".controller.ts",
@@ -182,6 +189,8 @@ const app = async () => {
     updateLastPort(pipelinePath, newPort);
     createEnvForNewService(pipelinePath, servicePath, newPort);
     createDockerFileForNewService(pipelinePath, servicePath, newPort);
+
+    createPackageForNewService(service, servicePath);
 
     //copying all files for initial setup
     copyFiles(filesListForCopy, pipelinePath, servicePath);
