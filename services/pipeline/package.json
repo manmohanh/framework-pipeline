@@ -1,11 +1,11 @@
 {
-  "name": "auth",
-  "version": "1.0.0",
+  "name": "ziviop",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/app.js",
   "types": "dist/app.d.ts",
   "bin": {
-    "cmp":"dist/app.js"
+    "zivio":"dist/app.js"
   },
   "scripts": {
     "build": "tsc",

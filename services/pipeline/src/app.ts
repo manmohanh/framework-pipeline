@@ -188,7 +188,7 @@ const app = async () => {
     const appPath = __dirname;
     const rootPath = currentDir
     const pipelinePath = path.resolve(appPath, "../");
-    const gatewayPath = path.join(path.resolve(currentDir, "../"), "gateway");
+    const gatewayPath = path.join(currentDir, "gateway");
     const servicePath = path.join(rootPath, serviceName);
     const srcPath = path.join(servicePath, "src");
     const appFilePath = path.join(srcPath, "app.ts");
